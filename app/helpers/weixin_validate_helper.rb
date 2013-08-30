@@ -1,0 +1,2 @@
+module WeixinValidateHelper
+end
