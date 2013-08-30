@@ -68,7 +68,7 @@ include REXML
      ret_item = Element.new("item")
 
      ret_item_title = Element.new("Title")
-     ret_item_title.add_text(CData.new("朝阳大悦城"))
+     ret_item_title.add_text(CData.new("朝阳大悦城-bj"))
      ret_item.add_element(ret_item_title)
      ret_item_desc = Element.new("Description").add_text(CData.new("朝阳大悦城位于北京城市东部朝青板块核心地段，朝阳北路与青年路交叉口的东北角，四、五环之间，与姚家园路、朝阳路共同构成三横三纵路网体系，集中了地铁、公交等多种出行工具，交通极为便利。得意于城市发展的重心东移，区域内已经云集了众多高档住宅，逐渐成为“中央生活区”，北京新贵人群、高级城市白领置业的首选之地。"))
      ret_item.add_element(ret_item_desc)
