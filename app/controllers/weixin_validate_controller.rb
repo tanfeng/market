@@ -38,7 +38,7 @@ include REXML
      content = root.elements["Content"].text.strip()
      msg_id = root.elements["MsgId"].text.strip()
      puts "ToUserName:#{to_user_name}, FromUserName:#{from_user_name}, CreateTime:#{create_time}, MsgType:#{msg_type}, Content:#{content}, MsgId:#{msg_id}"
-     #puts 'xml content:',root.to_a()
+     puts 'xml content:',root.to_a()
      
      # create return xml
      result = ''
