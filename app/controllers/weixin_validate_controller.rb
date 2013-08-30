@@ -31,6 +31,7 @@ include REXML
      doc = Document.new(request.body().string)
      doc.elements.each("xml/ToUserName") {|ele| puts ele, ele.text}
      root = doc.root
+     puts root.to_a()
      to_user_name = root.elements["ToUserName"].text.strip()
      from_user_name = root.elements["FromUserName"].text.strip()
      create_time = root.elements["CreateTime"].text.strip()
