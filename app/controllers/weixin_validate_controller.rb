@@ -45,12 +45,24 @@ include REXML
      
      if ( @msg_type == "text" )
        result = mixed_message(doc)
+     elsif ( @msg_type == "location" )
+       result = location_msg(doc)
      end
 
      render(:text => result)
   end
 
   private
+
+  def location_msg(doc)
+    root = doc.root
+    location_x = root.elements["Location_X"].text.strip()
+    location_y = root.elements["Location_Y"].text.strip()
+    scale = root.elements["Scale"].text.strip()
+    label = root.elements["Label"].text.strip()
+    puts "location message, x:#{location_x}, y:#{location_y}, scale:#{scale}, label:#{label}"
+
+  end
 
   def mixed_message(doc)
     # create return xml
