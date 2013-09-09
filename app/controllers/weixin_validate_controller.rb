@@ -1,6 +1,7 @@
 #encoding:utf-8
 require 'digest/sha1'
 require 'rexml/document'
+require 'mechanize'
 include REXML
 class WeixinValidateController < ApplicationController
 skip_before_filter :verify_authenticity_token
@@ -61,6 +62,10 @@ include REXML
     scale = root.elements["Scale"].text.strip()
     label = root.elements["Label"].text.strip()
     puts "location message, x:#{location_x}, y:#{location_y}, scale:#{scale}, label:#{label}"
+
+    agent = Mechanize.new
+    page = agent.get('http://api.map.baidu.com/place/v2/search?&query=商场&location=39.984114,116.382983&radius=2000&output=json&ak=1a88109bb973a17b0285501aae43642b')
+    puts page
 
   end
 
