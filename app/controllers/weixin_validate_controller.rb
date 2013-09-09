@@ -1,5 +1,4 @@
 #encoding:utf-8
-require 'rubygems'
 require 'digest/sha1'
 require 'rexml/document'
 require 'mechanize'
