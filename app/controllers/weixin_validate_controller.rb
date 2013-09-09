@@ -72,6 +72,9 @@ include REXML
   def mixed_message(doc)
     # create return xml
     agent = Mechanize.new
+    page = agent.get('http://api.map.baidu.com/place/v2/search?&query=商场&location=39.984114,116.382983&radius=2000&output=json&ak=1a88109bb973a17b0285501aae43642b')
+    puts "page:#{page}"
+
     result = ''
     ret_root = Element.new( "xml" )
     ret_to_user_name = Element.new("ToUserName")
