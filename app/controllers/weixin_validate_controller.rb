@@ -2,6 +2,7 @@
 require 'digest/sha1'
 require 'rexml/document'
 require 'mechanize'
+require 'json'
 include REXML
 class WeixinValidateController < ApplicationController
 skip_before_filter :verify_authenticity_token
@@ -72,8 +73,11 @@ include REXML
   def mixed_message(doc)
     # create return xml
     agent = Mechanize.new
-    page = agent.get_file('http://api.map.baidu.com/place/v2/search?&query=商场&location=39.984114,116.382983&radius=2000&output=json&ak=1a88109bb973a17b0285501aae43642b')
+    page = agent.get_file('http://api.map.baidu.com/place/v2/search?&query=商场&location=39.984114,116.382983&radius=2000&output=json&scope=2&ak=1a88109bb973a17b0285501aae43642b')
     puts "page:#{page}"
+
+    map_data = json.parse page
+    puts "map json data:#{map_data}"
 
     result = ''
     ret_root = Element.new( "xml" )
