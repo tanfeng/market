@@ -101,11 +101,12 @@ class WeixinValidateController < ApplicationController
       name = item["name"]
       location = item["location"]
       distance = item["detail_info"]["distance"]
-      if item["detail_info"]["detail_url"]
-        detail_url = item["detail_info"]["detail_url"]
-      else
-        detail_url = ""
-      end
+      detail_url = ""
+      #if item["detail_info"]["detail_url"]
+      #  detail_url = item["detail_info"]["detail_url"]
+      #else
+      #  detail_url = ""
+      #end
       puts "data: name:#{name}, location:#{location}, distance:#{distance}, detail_url:#{detail_url}"
 
       ret_item = Element.new("item")
