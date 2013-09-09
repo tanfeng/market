@@ -81,7 +81,7 @@ include REXML
     map_data[:results].each do |item|
         puts item
     end
-  end
+
 
     # ======================
 
