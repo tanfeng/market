@@ -78,8 +78,11 @@ include REXML
 
     map_data = JSON.parse page
     puts "map json data:#{map_data}"
-    map_data[:results].each do |item|
-        puts item
+    map_data["results"].each do |item|
+       name = item["name"]
+       location = item["location"]
+       distance = item["detail_info"]["distance"]
+       puts "data: name:#{name}, location:#{location}, distance:#{distance}"
     end
 
 
