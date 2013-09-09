@@ -111,6 +111,8 @@ include REXML
 
     ret_item = Element.new("item")
 
+
+
     ret_item_title = Element.new("Title")
     ret_item_title.add_text(CData.new("朝阳大悦城-bj"))
     ret_item.add_element(ret_item_title)
