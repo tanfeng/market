@@ -76,7 +76,7 @@ include REXML
     page = agent.get_file('http://api.map.baidu.com/place/v2/search?&query=商场&location=39.984114,116.382983&radius=2000&output=json&scope=2&ak=1a88109bb973a17b0285501aae43642b')
     puts "page:#{page}"
 
-    map_data = json.parse page
+    map_data = JSON.parse page
     puts "map json data:#{map_data}"
 
     result = ''
