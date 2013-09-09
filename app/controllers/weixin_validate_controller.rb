@@ -59,6 +59,14 @@ class WeixinValidateController < ApplicationController
   private
 
   def location_msg(doc)
+
+    agent = Mechanize.new
+    page = agent.get_file('http://api.map.baidu.com/place/v2/search?&query=商场&location=39.984114,116.382983&radius=2000&output=json&scope=2&ak=1a88109bb973a17b0285501aae43642b')
+    puts "page:#{page}"
+
+    map_data = JSON.parse page
+
+
     root = doc.root
     location_x = root.elements["Location_X"].text.strip()
     location_y = root.elements["Location_Y"].text.strip()
@@ -84,18 +92,18 @@ class WeixinValidateController < ApplicationController
     ret_msg_type.add_text(CData.new("news"))
     ret_root.add_element(ret_msg_type)
 
+    article_num = 8
+    if (map_data["results"].length < 8)
+      article_num = map_data["results"].length
+    end
     ret_article_count = Element.new("ArticleCount")
-    ret_article_count.add_text(1.to_s())
+    ret_article_count.add_text(article_num.to_s())
     ret_root.add_element(ret_article_count)
 
     ret_articles = Element.new("Articles")
 
 
-    agent = Mechanize.new
-    page = agent.get_file('http://api.map.baidu.com/place/v2/search?&query=商场&location=39.984114,116.382983&radius=2000&output=json&scope=2&ak=1a88109bb973a17b0285501aae43642b')
-    puts "page:#{page}"
 
-    map_data = JSON.parse page
     #puts "map json data:#{map_data}"
     map_data["results"].each do |item|
       name = item["name"]
