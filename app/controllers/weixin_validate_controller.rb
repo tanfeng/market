@@ -59,20 +59,18 @@ class WeixinValidateController < ApplicationController
   private
 
   def location_msg(doc)
-
-    agent = Mechanize.new
-    page = agent.get_file('http://api.map.baidu.com/place/v2/search?&query=商场&location=39.984114,116.382983&radius=2000&output=json&scope=2&ak=1a88109bb973a17b0285501aae43642b')
-    puts "page:#{page}"
-
-    map_data = JSON.parse page
-
-
     root = doc.root
     location_x = root.elements["Location_X"].text.strip()
     location_y = root.elements["Location_Y"].text.strip()
     scale = root.elements["Scale"].text.strip()
     label = root.elements["Label"].text.strip()
     puts "location message, x:#{location_x}, y:#{location_y}, scale:#{scale}, label:#{label}"
+
+    agent = Mechanize.new
+    page = agent.get_file("http://api.map.baidu.com/place/v2/search?&query=商场&location=#{location_x},#{location_y}&radius=2000&output=json&scope=2&ak=1a88109bb973a17b0285501aae43642b")
+    puts "page:#{page}"
+
+    map_data = JSON.parse page
 
     result = ''
     ret_root = Element.new("xml")
