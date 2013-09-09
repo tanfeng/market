@@ -78,6 +78,12 @@ include REXML
 
     map_data = JSON.parse page
     puts "map json data:#{map_data}"
+    map_data[:results].each do |item|
+        puts item
+    end
+  end
+
+    # ======================
 
     result = ''
     ret_root = Element.new( "xml" )
