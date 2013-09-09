@@ -64,26 +64,79 @@ include REXML
     label = root.elements["Label"].text.strip()
     puts "location message, x:#{location_x}, y:#{location_y}, scale:#{scale}, label:#{label}"
 
-    agent = Mechanize.new
-    page = agent.get('http://api.map.baidu.com/place/v2/search?&query=商场&location=39.984114,116.382983&radius=2000&output=json&ak=1a88109bb973a17b0285501aae43642b')
-    puts page
+    result = ''
+    ret_root = Element.new( "xml" )
+    ret_to_user_name = Element.new("ToUserName")
+    ret_to_user_name.add_text CData.new(@from_user_name)
+    ret_root.add_element(ret_to_user_name)
 
-  end
+    ret_from_user_name = Element.new("FromUserName")
+    ret_from_user_name.add_text(CData.new(@to_user_name))
+    ret_root.add_element(ret_from_user_name)
 
-  def mixed_message(doc)
-    # create return xml
+    ret_create_time = Element.new("CreateTime")
+    ret_create_time.add_text(Time.now.to_i.to_s)
+    ret_root.add_element(ret_create_time)
+
+    ret_msg_type = Element.new("MsgType")
+    ret_msg_type.add_text(CData.new("news"))
+    ret_root.add_element(ret_msg_type)
+
+    ret_article_count = Element.new("ArticleCount")
+    ret_article_count.add_text(1.to_s())
+    ret_root.add_element(ret_article_count)
+
+    ret_articles = Element.new("Articles")
+
+
     agent = Mechanize.new
     page = agent.get_file('http://api.map.baidu.com/place/v2/search?&query=商场&location=39.984114,116.382983&radius=2000&output=json&scope=2&ak=1a88109bb973a17b0285501aae43642b')
     puts "page:#{page}"
 
     map_data = JSON.parse page
-    puts "map json data:#{map_data}"
+    #puts "map json data:#{map_data}"
     map_data["results"].each do |item|
-       name = item["name"]
-       location = item["location"]
-       distance = item["detail_info"]["distance"]
-       puts "data: name:#{name}, location:#{location}, distance:#{distance}"
+      name = item["name"]
+      location = item["location"]
+      distance = item["detail_info"]["distance"]
+      detail_url = item["detail_info"]["detail_url"]
+      puts "data: name:#{name}, location:#{location}, distance:#{distance}, detail_url:#{detail_url}"
+
+      ret_item = Element.new("item")
+      ret_item_title = Element.new("Title")
+      ret_item_title.add_text(CData.new(name))
+      ret_item.add_element(ret_item_title)
+      ret_item_desc = Element.new("Description").add_text(CData.new(""))
+      ret_item.add_element(ret_item_desc)
+      ret_item.add_element(Element.new("PicUrl").add_text(CData.new("")))
+      ret_item.add_element(Element.new("Url").add_text(CData.new(detail_url)))
+
+      ret_articles.add_element(ret_item)
     end
+
+    ret_root.add_element(ret_articles)
+
+    ret_root.write(result)
+    puts "result:#{result}"
+
+    return result
+
+  end
+
+  def mixed_message(doc)
+    # create return xml
+    #agent = Mechanize.new
+    #page = agent.get_file('http://api.map.baidu.com/place/v2/search?&query=商场&location=39.984114,116.382983&radius=2000&output=json&scope=2&ak=1a88109bb973a17b0285501aae43642b')
+    #puts "page:#{page}"
+    #
+    #map_data = JSON.parse page
+    #puts "map json data:#{map_data}"
+    #map_data["results"].each do |item|
+    #   name = item["name"]
+    #   location = item["location"]
+    #   distance = item["detail_info"]["distance"]
+    #   puts "data: name:#{name}, location:#{location}, distance:#{distance}"
+    #end
 
 
     # ======================
