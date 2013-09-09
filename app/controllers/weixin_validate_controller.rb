@@ -72,6 +72,7 @@ include REXML
 
   def mixed_message(doc)
     # create return xml
+    agent = Mechanize.new
     result = ''
     ret_root = Element.new( "xml" )
     ret_to_user_name = Element.new("ToUserName")
