@@ -5,53 +5,55 @@ require 'mechanize'
 require 'json'
 include REXML
 class WeixinValidateController < ApplicationController
-skip_before_filter :verify_authenticity_token
+  skip_before_filter :verify_authenticity_token
 #protect_from_forgery :except => :create
-include REXML
+  include REXML
+
   def supermall
-     mytoken = 'tan1feng0supermall'
-     for_valid_param =[]
-     for_valid_param << mytoken
-     for_valid_param << params[:timestamp]
-     for_valid_param << params[:nonce]
-     string_for_return = '无效请求'
-     if params[:signature] and(params[:signature] == Digest::SHA1.hexdigest(for_valid_param.sort!.join()))
-     puts "*"*10,"认证成功","*"*10
-     string_for_return = params[:echostr]
-       #send_data(string_for_return)
+    mytoken = 'tan1feng0supermall'
+    for_valid_param =[]
+    for_valid_param << mytoken
+    for_valid_param << params[:timestamp]
+    for_valid_param << params[:nonce]
+    string_for_return = '无效请求'
+    if params[:signature] and(params[:signature] == Digest::SHA1.hexdigest(for_valid_param.sort!.join()))
+      puts "*"*10, "认证成功", "*"*10
+      string_for_return = params[:echostr]
+      #send_data(string_for_return)
       render(:text => string_for_return)
     else
-     render()
-     end
+      render()
+    end
   end
+
   def supermall_post
-     content = params[:Content]
-     sign = params[:signature]
-     puts 'do post:',content, sign,params,request.method,request.headers
-     #puts 'body:',request.body().string
+    content = params[:Content]
+    sign = params[:signature]
+    puts 'do post:', content, sign, params, request.method, request.headers
+    #puts 'body:',request.body().string
 
-     doc = Document.new(request.body().string)
-     doc.elements.each("xml/ToUserName") {|ele| puts ele, ele.text}
-     root = doc.root
-     puts root.to_a()
-     @to_user_name = root.elements["ToUserName"].text.strip()
-     @from_user_name = root.elements["FromUserName"].text.strip()
-     @create_time = root.elements["CreateTime"].text.strip()
-     @msg_type = root.elements["MsgType"].text.strip()
-     @msg_id = root.elements["MsgId"].text.strip()
+    doc = Document.new(request.body().string)
+    doc.elements.each("xml/ToUserName") { |ele| puts ele, ele.text }
+    root = doc.root
+    puts root.to_a()
+    @to_user_name = root.elements["ToUserName"].text.strip()
+    @from_user_name = root.elements["FromUserName"].text.strip()
+    @create_time = root.elements["CreateTime"].text.strip()
+    @msg_type = root.elements["MsgType"].text.strip()
+    @msg_id = root.elements["MsgId"].text.strip()
 
-     puts "ToUserName:#{@to_user_name}, FromUserName:#{@from_user_name}, CreateTime:#{@create_time}, MsgType:#{@msg_type}, MsgId:#{@msg_id}"
+    puts "ToUserName:#{@to_user_name}, FromUserName:#{@from_user_name}, CreateTime:#{@create_time}, MsgType:#{@msg_type}, MsgId:#{@msg_id}"
 
-     #content = root.elements["Content"].text.strip()
-     puts 'xml content:',root.to_a()
-     
-     if ( @msg_type == "text" )
-       result = mixed_message(doc)
-     elsif ( @msg_type == "location" )
-       result = location_msg(doc)
-     end
+    #content = root.elements["Content"].text.strip()
+    puts 'xml content:', root.to_a()
 
-     render(:text => result)
+    if (@msg_type == "text")
+      result = mixed_message(doc)
+    elsif (@msg_type == "location")
+      result = location_msg(doc)
+    end
+
+    render(:text => result)
   end
 
   private
@@ -65,7 +67,7 @@ include REXML
     puts "location message, x:#{location_x}, y:#{location_y}, scale:#{scale}, label:#{label}"
 
     result = ''
-    ret_root = Element.new( "xml" )
+    ret_root = Element.new("xml")
     ret_to_user_name = Element.new("ToUserName")
     ret_to_user_name.add_text CData.new(@from_user_name)
     ret_root.add_element(ret_to_user_name)
@@ -99,7 +101,11 @@ include REXML
       name = item["name"]
       location = item["location"]
       distance = item["detail_info"]["distance"]
-      detail_url = item["detail_info"]["detail_url"]
+      if item["detail_info"]["detail_url"]
+        detail_url = item["detail_info"]["detail_url"]
+      else
+        detail_url = ""
+      end
       puts "data: name:#{name}, location:#{location}, distance:#{distance}, detail_url:#{detail_url}"
 
       ret_item = Element.new("item")
@@ -142,7 +148,7 @@ include REXML
     # ======================
 
     result = ''
-    ret_root = Element.new( "xml" )
+    ret_root = Element.new("xml")
     ret_to_user_name = Element.new("ToUserName")
     ret_to_user_name.add_text CData.new(@from_user_name)
     ret_root.add_element(ret_to_user_name)
